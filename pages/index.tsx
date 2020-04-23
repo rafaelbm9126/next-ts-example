@@ -1,36 +1,33 @@
-import React from 'react';
-import Card from '@components/card';
-import Head from 'next/head';
-import { useQuery } from '@apollo/react-hooks';
-import POKEMONS_QUERY from '@graphql/pokemons';
-import ApolloWrapper from '@graphql/provider';
+import React from "react";
+import { connect, ConnectedProps } from "react-redux";
+import { StateModel, RedStateModel } from "../redux/type";
+import { increment, decrement } from "../redux/action";
 
-const Home = () => {
-    const { loading, error, data } = useQuery(POKEMONS_QUERY);
-    return (
-        <div>
-            <Head>
-                <title>Create Next App</title>
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
-            <h1>Hi</h1>
-            <div>
-            {
-                (loading) ?
-                    <h1>Loading..!</h1>
-                :
-                    data.pokemons.map((item: any, index: number) =>
-                        <Card
-                            key={`card-${index}`}
-                            title={item.name}
-                            description={item.classification}
-                            avatar={item.image}
-                        />
-                    )
-            }
-            </div>
-        </div>
-    );
-}
+const mapState = (state: RedStateModel): StateModel => {
+  return {
+    item: state.number.item,
+  };
+};
 
-export default ApolloWrapper(Home);
+const mapDispatch = {
+  inc: () => increment(),
+  dec: () => decrement(),
+};
+
+const connector = connect(mapState, mapDispatch);
+
+type Props = ConnectedProps<typeof connector>;
+
+const Home: React.FunctionComponent<Props> = (props) => {
+  return (
+    <div>
+      <h1>Hi, {props.item}</h1>
+      <br />
+      <button onClick={() => props.inc()}>+</button>
+      &nbsp;&nbsp;
+      <button onClick={() => props.dec()}>-</button>
+    </div>
+  );
+};
+
+export default connector(Home);
