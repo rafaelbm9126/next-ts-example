@@ -1,8 +1,10 @@
 import { combineReducers } from "redux";
-import NumberReducer from "./reducer";
+import { LoginReducer } from "../components/Login";
+import { AccountReducer } from "../components/Account";
 
 const rootReducer = combineReducers({
-  number: NumberReducer,
+  LoginReducer,
+  AccountReducer,
 });
 
 export default rootReducer;
